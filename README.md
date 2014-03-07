@@ -1,4 +1,4 @@
-bucket_face
+# bucket_face
 
 Deploy a Puppet Face that allows human readable access to the filebucket contents, e.g.
 
