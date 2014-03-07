@@ -1,0 +1,8 @@
+name    'dhgwilliam-bucket_face'
+version '0.0.1'
+source 'https://github.com/dhgwilliam/puppet-face-bucket'
+author 'dhgwilliam'
+license 'Apache License, Version 2.0'
+summary 'Puppet Face for browsing the filebucket'
+description 'Allows user to browse the filebucket'
+project_page 'https://github.com/dhgwilliam/puppet-face-bucket'
