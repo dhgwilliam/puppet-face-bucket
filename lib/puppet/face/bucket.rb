@@ -33,7 +33,7 @@ Puppet::Face.define(:bucket, '0.1.0') do
       end
 
       display_list.each do |file|
-        puts "#{file.md5}\t#{file.human_date}\t#{file.path}"
+        puts file.display_list
       end
       nil
     end
@@ -55,6 +55,20 @@ Puppet::Face.define(:bucket, '0.1.0') do
 
     when_invoked do |md5, dest, options|
       exec("cp #{BucketFile.new(:md5 => md5).absolute_path}/contents #{dest}")
+    end
+  end
+
+  action :grep do
+    summary "Search the files in the filebucket"
+    arguments "<search terms>"
+
+    when_invoked do |*terms|
+      break if terms[0..-2].empty?
+      terms = Regexp.new(terms[0..-2].join(" "))
+      Bucket.scan_file.map {|f|
+        file = BucketFile.new(:path => f)
+        "#{file.display_list}: \n\t#{file.match_contents(:match => terms)}" if file.match_contents(:match => terms)
+      }.select {|f| f}
     end
   end
 end
@@ -81,6 +95,19 @@ class BucketFile
     @abs_path || Bucket.scan_file.select {|f| f.match(/#{md5}/)}.first
   end
 
+  def contents_path
+    "#{absolute_path}/contents"
+  end
+
+  def contents
+    File.read(contents_path)
+  end
+
+  def match_contents(args)
+    matches = contents.scan(/^.*#{args[:match]}.*$/)
+    matches.join("\n\t").chomp unless matches.empty?
+  end
+
   def md5_dir
     m = md5
     "#{m[0]}/#{m[1]}/#{m[2]}/#{m[3]}/#{m[4]}/#{m[5]}/#{m[6]}/#{m[7]}"
@@ -101,6 +128,11 @@ class BucketFile
   def human_date
     date.strftime('%F %H:%M')
   end
+
+  def display_list
+    "#{md5}\t#{human_date}\t#{path}"
+  end
+
 
   def self.bucket
     Bucket.path
