@@ -1,7 +1,7 @@
 require 'puppet'
 require 'puppet/face'
 
-Puppet::Face.define(:bucket, '0.0.1') do
+Puppet::Face.define(:bucket, '0.1.0') do
   summary "Interact with the filebucket"
   copyright "David Gwilliam", 2014
   license "Apache 2"
@@ -22,17 +22,17 @@ Puppet::Face.define(:bucket, '0.0.1') do
     when_invoked do |options|
       list = Bucket.scan_md5.map {|m| BucketFile.new(:md5 => m)}
 
-      if options[:date] and options[:reverse]
-        list.sort! {|f, g| g.date <=> f.date}
+      display_list = if options[:date] and options[:reverse]
+        list.sort {|f, g| g.date <=> f.date}
       elsif options[:date] and !options[:reverse]
-        list.sort_by! {|f| f.date}
+        list.sort_by {|f| f.date}
       elsif !options[:date] and options[:reverse]
-        list.sort! {|f, g| g.path <=> f.path}
+        list.sort {|f, g| g.path <=> f.path}
       else
-        list.sort_by! {|f| f.path}
+        list.sort_by {|f| f.path}
       end
 
-      list.each do |file|
+      display_list.each do |file|
         puts "#{file.md5}\t#{file.human_date}\t#{file.path}"
       end
       nil
