@@ -2,7 +2,7 @@
 
 Deploy a Puppet Face that allows human readable access to the filebucket contents, e.g.
 
-    master# puppet bucket list
+    [root@master ~]# puppet bucket list
     c74c148efcf0db7a55b4095628d72708        2014-03-06 22:31        /etc/asound.conf
     83bac3ca862d50579ed8b8690ffcb6d0        2014-03-06 05:38        /etc/krb5.conf
     7fe170afee81af1e7c1551533249c88e        2014-03-06 01:21        /etc/puppetlabs/activemq/activemq-wrapper.conf
@@ -13,7 +13,7 @@ Deploy a Puppet Face that allows human readable access to the filebucket content
     ad775a0c21b24d38f2d15f4ee7b9e1b3        2014-03-06 01:20        /opt/puppet/var/lib/pgsql/9.2/data/pg_hba.conf
     d41d8cd98f00b204e9800998ecf8427e        2014-03-06 01:22        /opt/puppet/var/lib/pgsql/9.2/data/postgresql_puppet_extras.conf
 
-    master# puppet bucket view c74c148efcf0db7a55b4095628d72708
+    [root@master ~]# puppet bucket view c74c148efcf0db7a55b4095628d72708
     #
     # Place your global alsa-lib configuration here...
     #
@@ -28,6 +28,13 @@ Deploy a Puppet Face that allows human readable access to the filebucket content
             }
     ]
 
+v0.2.0 adds support for `puppet bucket grep`:
+
+    [root@master ~]# puppet bucket grep Manager
+    6f2472320af7af559035203c520267a4        2014-03-08 21:27        /etc/libuser.conf:
+            # binddn = cn=Manager,dc=example,dc=com
+            # user = Manager
+            # authuser = Manager
 License
 -------
 
