@@ -1,0 +1,4 @@
+*.swp
+.vagrant
+Vagrantfile
+pkg
