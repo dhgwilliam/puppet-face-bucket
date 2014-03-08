@@ -1,7 +1,7 @@
 require 'puppet'
 require 'puppet/face'
 
-Puppet::Face.define(:bucket, '0.1.0') do
+Puppet::Face.define(:bucket, '0.2.0') do
   summary "Interact with the filebucket"
   copyright "David Gwilliam", 2014
   license "Apache 2"
