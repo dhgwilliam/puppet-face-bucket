@@ -20,7 +20,7 @@ Puppet::Face.define(:bucket, '0.2.0') do
     end
 
     when_invoked do |options|
-      list = Bucket.scan_md5.map {|m| BucketFile.new(:md5 => m)}
+      list = Bucket.scan_file.map {|p| BucketFile.new(:path => p)}
 
       display_list = if options[:date] and options[:reverse]
         list.sort {|f, g| g.date <=> f.date}
@@ -77,10 +77,10 @@ end
 class BucketFile
   def initialize(args)
     if args[:md5]
-      @md5      = args[:md5] ? args[:md5] : md5
+      @md5      = args[:md5]
       @abs_path = absolute_path
     elsif args[:path]
-      @abs_path = args[:path] ? args[:path] : absolute_path
+      @abs_path = args[:path]
       @md5      = md5
     end
     @date     = date
@@ -91,6 +91,7 @@ class BucketFile
     @md5 || absolute_path.slice(/[a-f0-9]{32}/)
   end
 
+  #TODO this is extremely slow
   def absolute_path
     @abs_path || Bucket.scan_file.select {|f| f.match(/#{md5}/)}.first
   end
