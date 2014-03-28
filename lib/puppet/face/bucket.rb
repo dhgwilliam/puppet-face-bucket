@@ -119,7 +119,7 @@ class BucketFile
   end
 
   def basename
-    @basename || File.basename(path)
+    @basename || path.map{|p|File.basename(p)}.uniq
   end
 
   def path
@@ -143,7 +143,11 @@ class BucketFile
   end
 
   def display_list
-    "#{md5}\t#{human_date}\t#{path}"
+    if path.empty?
+      "#{md5}\t#{human_date}\tNo path"
+    else
+      path.map { |p| "#{md5}\t#{human_date}\t#{p}" }.join("\n")
+    end
   end
 
   def display_short
