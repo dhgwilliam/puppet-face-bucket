@@ -1,4 +1,4 @@
-# bucket_face
+# bucket_face #
 
 Deploy a Puppet Face that allows human readable access to the filebucket contents, e.g.
 
@@ -28,13 +28,29 @@ Deploy a Puppet Face that allows human readable access to the filebucket content
             }
     ]
 
-v0.2.0 adds support for `puppet bucket grep`:
+`puppet bucket grep`:
 
     [root@master ~]# puppet bucket grep Manager
     6f2472320af7af559035203c520267a4        2014-03-08 21:27        /etc/libuser.conf:
             # binddn = cn=Manager,dc=example,dc=com
             # user = Manager
             # authuser = Manager
+
+    [root@master ~]# puppet bucket grep /etc/hosts
+    554df081fa9d04fb28067dd2f227128b        2014-03-11 02:48        No path:
+                echo '<%= @serverip %>  classroom.puppetlabs.vm classroom' >> /etc/hosts
+    bad420278dea7f7a2632eec42d93beef        2014-03-10 21:40        /etc/hosts
+    ee5f4cd1f70310816ed6eb552cc2c245        2014-03-10 21:21        /etc/hosts
+    decf8046d098a1db72e67dc7bea46c06        2014-03-10 22:16        /etc/hosts
+
+Commands
+---
+
+* `puppet bucket list [--date]`
+* `puppet bucket grep [search terms]`
+* `puppet bucket view [md5]`
+* `puppet bucket copy [md5] [dest]`
+
 License
 -------
 
