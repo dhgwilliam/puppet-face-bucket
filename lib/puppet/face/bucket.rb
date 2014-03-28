@@ -166,11 +166,7 @@ end
 
 class Bucket
   def self.path
-    if File.exist?('/var/opt/lib/pe-puppet/bucket')
-      [ '/var/opt/lib/pe-puppet/bucket', '/var/opt/lib/pe-puppet/clientbucket' ]
-    else
-      [ '/var/lib/puppet/bucket' , '/var/lib/puppet/clientbucket']
-    end
+    [ Puppet[:bucketdir], Puppet[:clientbucketdir] ]
   end
 
   def self.scan_md5
