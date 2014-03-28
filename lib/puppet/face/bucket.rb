@@ -67,7 +67,11 @@ Puppet::Face.define(:bucket, '0.2.0') do
       terms = Regexp.new(terms[0..-2].join(" "))
       Bucket.scan_file.map {|f|
         file = BucketFile.new(:path => f)
-        "#{file.display_list}: \n\t#{file.match_contents(:match => terms)}" if file.match_contents(:match => terms)
+        if file.match_path?(:match => terms)
+          file.display_path_match(:match => terms)
+        elsif file.match_contents(:match => terms)
+          "#{file.display_list}:\n\t#{file.match_contents(:match => terms)}"
+        end
       }.select {|f| f}
     end
   end
@@ -119,7 +123,15 @@ class BucketFile
   end
 
   def path
-    @path || File.read("#{absolute_path}/paths").chomp
+    @path || File.read("#{absolute_path}/paths").split("\n").map{|path|path.chomp}
+  end
+
+  def match_path?(args)
+    path_match(args).inject(false) {|truth, match| match ? true : truth }
+  end
+
+  def path_match(args)
+    path.map {|p| p.match(/^.*#{args[:match]}.*$/)}.select {|m| m}
   end
 
   def date
@@ -134,6 +146,14 @@ class BucketFile
     "#{md5}\t#{human_date}\t#{path}"
   end
 
+  def display_short
+    "#{md5}\t#{human_date}\t#{basename.join(", ")}"
+  end
+
+  def display_path_match(args)
+    path_match(args).map{ |match|
+      "#{md5}\t#{human_date}\t#{match}"}.join("\n")
+  end
 
   def self.bucket
     Bucket.path
